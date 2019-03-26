@@ -87,6 +87,7 @@
     "window-classlist": "0.0.4",
     "window-fetch": "0.0.10",
     "window-selector": "0.0.6",
+    "window-sw": "0.0.3",
     "window-xhr": "0.0.29",
     "worker-native": "0.0.33",
     "ws": "^6.2.0"
