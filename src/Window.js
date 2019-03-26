@@ -34,6 +34,7 @@ const fetch = require('window-fetch');
 const {Request, Response, Headers, Blob} = fetch;
 
 const WebSocket = require('ws/lib/websocket');
+const serviceWorker = require('window-sw');
 const {
   /* getUserMedia,
   MediaStream,
@@ -782,6 +783,7 @@ const _normalizeUrl = utils._makeNormalizeUrl(options.baseUrl);
   window.localStorage = new LocalStorage(path.join(options.dataPath, '.localStorage'));
   window.sessionStorage = new LocalStorage(path.join(options.dataPath, '.sessionStorage'));
   window.indexedDB = indexedDB;
+  window.serviceWorker = serviceWorker;
   window.performance = performance;
   window.screen = new Screen(window);
   window.urls = urls; // XXX non-standard
