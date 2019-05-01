@@ -934,6 +934,9 @@ const mlPresentState = {
 };
 GlobalContext.mlPresentState = mlPresentState;
 
+const zedContext = new nativeBindings.nativeZed();
+zedContext.RequestPresent();
+
 if (nativeBindings.nativeMl) {
   mlPresentState.mlContext = new nativeBindings.nativeMl();
   nativeBindings.nativeMl.requestPresent = function(layers) {
