@@ -1034,6 +1034,14 @@ const _makeWindow = (options = {}, parent = null, top = null) => {
     } : null,
     monitors: new MonitorManager(),
   };
+  let zedContext = null;
+  window.zed = {
+    requestMeshing(fn) {
+      zedContext = new nativeBindings.nativeZed();
+      const context = GlobalContext.contexts.find(context => context.canvas.ownerDocument === this.ownerDocument);
+      zedContext.RequestPresent(context, fn);
+    },
+  };
   window.DOMParser = class DOMParser {
     parseFromString(htmlString, type) {
       const _recurse = node => {
@@ -1319,6 +1327,10 @@ const _makeWindow = (options = {}, parent = null, top = null) => {
       }
     };
     function tickAnimationFrame() {
+      if (zedContext) {
+        zedContext.WaitGetPoses();
+      }
+      
       if (rafCbs.length > 0) {
         _cacheLocalCbs(rafCbs);
 
