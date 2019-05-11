@@ -536,54 +536,57 @@ const _startTopRenderLoop = () => {
 
     topVrPresentState.hasPose = true;
 
-    // hmd pose
-    const hmdMatrix = localMatrix.fromArray(localFloat32HmdPoseArray);
+    const _loadHmd = () => {
+      // hmd pose
+      const hmdMatrix = localMatrix.fromArray(localFloat32HmdPoseArray);
 
-    hmdMatrix.decompose(localVector, localQuaternion, localVector2);
-    localVector.toArray(xrState.position);
-    localQuaternion.toArray(xrState.orientation);
+      hmdMatrix.decompose(localVector, localQuaternion, localVector2);
+      localVector.toArray(xrState.position);
+      localQuaternion.toArray(xrState.orientation);
 
-    hmdMatrix.getInverse(hmdMatrix);
+      hmdMatrix.getInverse(hmdMatrix);
 
-    // left eye pose
-    topVrPresentState.vrSystem.GetEyeToHeadTransform(0, localFloat32MatrixArray);
-    localMatrix2.fromArray(localFloat32MatrixArray);
-    localMatrix2.decompose(localVector, localQuaternion, localVector2);
-    localVector.toArray(xrState.leftOffset);
-    localMatrix2
-      .getInverse(localMatrix2)
-      .multiply(hmdMatrix);
-    localMatrix2.toArray(xrState.leftViewMatrix);
+      // left eye pose
+      topVrPresentState.vrSystem.GetEyeToHeadTransform(0, localFloat32MatrixArray);
+      localMatrix2.fromArray(localFloat32MatrixArray);
+      localMatrix2.decompose(localVector, localQuaternion, localVector2);
+      localVector.toArray(xrState.leftOffset);
+      localMatrix2
+        .getInverse(localMatrix2)
+        .multiply(hmdMatrix);
+      localMatrix2.toArray(xrState.leftViewMatrix);
 
-    topVrPresentState.vrSystem.GetProjectionMatrix(0, xrState.depthNear[0], xrState.depthFar[0], localFloat32MatrixArray);
-    xrState.leftProjectionMatrix.set(localFloat32MatrixArray);
+      topVrPresentState.vrSystem.GetProjectionMatrix(0, xrState.depthNear[0], xrState.depthFar[0], localFloat32MatrixArray);
+      xrState.leftProjectionMatrix.set(localFloat32MatrixArray);
 
-    topVrPresentState.vrSystem.GetProjectionRaw(0, localFovArray);
-    for (let i = 0; i < localFovArray.length; i++) {
-      xrState.leftFov[i] = Math.atan(localFovArray[i]) / Math.PI * 180;
-    }
+      topVrPresentState.vrSystem.GetProjectionRaw(0, localFovArray);
+      for (let i = 0; i < localFovArray.length; i++) {
+        xrState.leftFov[i] = Math.atan(localFovArray[i]) / Math.PI * 180;
+      }
 
-    // right eye pose
-    topVrPresentState.vrSystem.GetEyeToHeadTransform(1, localFloat32MatrixArray);
-    localMatrix2.fromArray(localFloat32MatrixArray);
-    localMatrix2.decompose(localVector, localQuaternion, localVector2);
-    localVector.toArray(xrState.rightOffset);
-    localMatrix2
-      .getInverse(localMatrix2)
-      .multiply(hmdMatrix);
-    localMatrix2.toArray(xrState.rightViewMatrix);
+      // right eye pose
+      topVrPresentState.vrSystem.GetEyeToHeadTransform(1, localFloat32MatrixArray);
+      localMatrix2.fromArray(localFloat32MatrixArray);
+      localMatrix2.decompose(localVector, localQuaternion, localVector2);
+      localVector.toArray(xrState.rightOffset);
+      localMatrix2
+        .getInverse(localMatrix2)
+        .multiply(hmdMatrix);
+      localMatrix2.toArray(xrState.rightViewMatrix);
 
-    topVrPresentState.vrSystem.GetProjectionMatrix(1, xrState.depthNear[0], xrState.depthFar[0], localFloat32MatrixArray);
-    xrState.rightProjectionMatrix.set(localFloat32MatrixArray);
+      topVrPresentState.vrSystem.GetProjectionMatrix(1, xrState.depthNear[0], xrState.depthFar[0], localFloat32MatrixArray);
+      xrState.rightProjectionMatrix.set(localFloat32MatrixArray);
 
-    topVrPresentState.vrSystem.GetProjectionRaw(1, localFovArray);
-    for (let i = 0; i < localFovArray.length; i++) {
-      xrState.rightFov[i] = Math.atan(localFovArray[i]) / Math.PI * 180;
-    }
+      topVrPresentState.vrSystem.GetProjectionRaw(1, localFovArray);
+      for (let i = 0; i < localFovArray.length; i++) {
+        xrState.rightFov[i] = Math.atan(localFovArray[i]) / Math.PI * 180;
+      }
 
-    // build stage parameters
-    // topVrPresentState.vrSystem.GetSeatedZeroPoseToStandingAbsoluteTrackingPose(localFloat32MatrixArray);
-    // stageParameters.sittingToStandingTransform.set(localFloat32MatrixArray);
+      // build stage parameters
+      // topVrPresentState.vrSystem.GetSeatedZeroPoseToStandingAbsoluteTrackingPose(localFloat32MatrixArray);
+      // stageParameters.sittingToStandingTransform.set(localFloat32MatrixArray);
+    };
+    _loadHmd();
 
     // build gamepads data
     const _loadGamepad = i => {
