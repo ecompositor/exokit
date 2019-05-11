@@ -484,86 +484,42 @@ const _startTopRenderLoop = () => {
     localQuaternion.toArray(xrState.orientation);
 
     // Controllers.
-    {
-      const leftGamepad = xrState.gamepads[0];
+    const _loadGamepad = (i, controllerPositionArray3, controllerQuaternionArray4) => {
+      const gamepad = xrState.gamepads[i];
 
       // Pose
-      leftGamepad.position[0] = leftControllerPositionArray3[0];
-      leftGamepad.position[1] = leftControllerPositionArray3[1];
-      leftGamepad.position[2] = leftControllerPositionArray3[2];
-
-      leftGamepad.orientation[0] = leftControllerQuaternionArray4[0];
-      leftGamepad.orientation[1] = leftControllerQuaternionArray4[1];
-      leftGamepad.orientation[2] = leftControllerQuaternionArray4[2];
-      leftGamepad.orientation[3] = leftControllerQuaternionArray4[3];
+      gamepad.position.set(controllerPositionArray3);
+      gamepad.orientation.set(controllerQuaternionArray4);
 
       // Input
       topVrPresentState.vrContext.GetControllersInputState(0, localGamepadArray);
 
-      leftGamepad.connected[0] = localGamepadArray[0];
+      gamepad.connected[0] = localGamepadArray[0];
 
       // Pressed
-      leftGamepad.buttons[0].pressed[0] = localGamepadArray[3]; // thumbstick
-      leftGamepad.buttons[1].pressed[0] = localGamepadArray[5] >= 0.01; // trigger
-      leftGamepad.buttons[2].pressed[0] = localGamepadArray[6] >= 0.01; // grip
-      leftGamepad.buttons[3].pressed[0] = localGamepadArray[1] == 1; // xbutton
-      leftGamepad.buttons[4].pressed[0] = localGamepadArray[2] == 1; // ybutton
-      leftGamepad.buttons[5].pressed[0] = localGamepadArray[4] == 1; // menu
+      gamepad.buttons[0].pressed[0] = localGamepadArray[3]; // thumbstick
+      gamepad.buttons[1].pressed[0] = localGamepadArray[5] >= 0.01; // trigger
+      gamepad.buttons[2].pressed[0] = localGamepadArray[6] >= 0.01; // grip
+      gamepad.buttons[3].pressed[0] = localGamepadArray[1] == 1; // xbutton
+      gamepad.buttons[4].pressed[0] = localGamepadArray[2] == 1; // ybutton
+      gamepad.buttons[5].pressed[0] = localGamepadArray[4] == 1; // menu
 
       // touched
-      leftGamepad.buttons[0].touched[0] = localGamepadArray[9]; // thumbstick
-      leftGamepad.buttons[1].touched[0] = localGamepadArray[10]; // trigger
-      leftGamepad.buttons[3].touched[0] = localGamepadArray[7]; // xbutton
-      leftGamepad.buttons[4].touched[0] = localGamepadArray[8]; // ybutton
+      gamepad.buttons[0].touched[0] = localGamepadArray[9]; // thumbstick
+      gamepad.buttons[1].touched[0] = localGamepadArray[10]; // trigger
+      gamepad.buttons[3].touched[0] = localGamepadArray[7]; // xbutton
+      gamepad.buttons[4].touched[0] = localGamepadArray[8]; // ybutton
 
       // thumbstick axis
-      leftGamepad.axes[0] = localGamepadArray[11];
-      leftGamepad.axes[1] = localGamepadArray[12];
+      gamepad.axes[0] = localGamepadArray[11];
+      gamepad.axes[1] = localGamepadArray[12];
 
       // values
-      leftGamepad.buttons[1].value[0] = localGamepadArray[5]; // trigger
-      leftGamepad.buttons[2].value[0] = localGamepadArray[6]; // grip
+      gamepad.buttons[1].value[0] = localGamepadArray[5]; // trigger
+      gamepad.buttons[2].value[0] = localGamepadArray[6]; // grip
     }
-    {
-      const rightGamepad = xrState.gamepads[1];
-
-      // Pose
-      rightGamepad.position[0] = rightControllerPositionArray3[0];
-      rightGamepad.position[1] = rightControllerPositionArray3[1];
-      rightGamepad.position[2] = rightControllerPositionArray3[2];
-
-      rightGamepad.orientation[0] = rightControllerQuaternionArray4[0];
-      rightGamepad.orientation[1] = rightControllerQuaternionArray4[1];
-      rightGamepad.orientation[2] = rightControllerQuaternionArray4[2];
-      rightGamepad.orientation[3] = rightControllerQuaternionArray4[3];
-
-      // Input
-      topVrPresentState.vrContext.GetControllersInputState(1, localGamepadArray);
-
-      rightGamepad.connected[0] = localGamepadArray[0];
-
-      // pressed
-      rightGamepad.buttons[0].pressed[0] = localGamepadArray[3]; // thumbstick
-      rightGamepad.buttons[1].pressed[0] = localGamepadArray[5] >= 0.1; // trigger
-      rightGamepad.buttons[2].pressed[0] = localGamepadArray[6] >= 0.1; // grip
-      rightGamepad.buttons[3].pressed[0] = localGamepadArray[1] == 1; // xbutton
-      rightGamepad.buttons[4].pressed[0] = localGamepadArray[2] == 1; // ybutton
-      rightGamepad.buttons[5].pressed[0] = localGamepadArray[4] == 1; // menu
-
-      // touched
-      rightGamepad.buttons[0].touched[0] = localGamepadArray[9]; // thumbstick
-      rightGamepad.buttons[1].touched[0] = localGamepadArray[10]; // trigger
-      rightGamepad.buttons[3].touched[0] = localGamepadArray[7]; // xbutton
-      rightGamepad.buttons[4].touched[0] = localGamepadArray[8]; // ybutton
-
-      // thumbstick axis
-      rightGamepad.axes[0] = localGamepadArray[11];
-      rightGamepad.axes[1] = localGamepadArray[12];
-
-      // values
-      rightGamepad.buttons[1].value[0] = localGamepadArray[5]; // trigger
-      rightGamepad.buttons[2].value[0] = localGamepadArray[6]; // grip
-    }
+    _loadGamepad(0, leftControllerPositionArray3, leftControllerQuaternionArray4);
+    _loadGamepad(1, rightControllerPositionArray3, rightControllerQuaternionArray4);
   };
   const _waitGetPosesOpenvr = async () => {
     // wait for frame
